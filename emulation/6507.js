@@ -454,7 +454,7 @@ var CPU_6507 = (function (cpu, mem) {
   //Branch if carry clear
   var BCC_BLT = function BCC()
   {
-    var value = mem.readByte(cpu.reg.PC + 1);
+    var value = utils.fromTwosComplement(mem.readByte(cpu.reg.PC + 1));
     if(cpu.P_STATUS.C())
     {
       cpu.reg.PC +=2
@@ -475,7 +475,7 @@ var CPU_6507 = (function (cpu, mem) {
   //Branch if carry set
   var BCS_BGE = function BCS()
   {
-    var value = mem.readByte(cpu.reg.PC + 1);
+    var value = utils.fromTwosComplement(mem.readByte(cpu.reg.PC + 1));
     if(!cpu.P_STATUS.C())
     {
       cpu.reg.PC +=2
@@ -496,7 +496,7 @@ var CPU_6507 = (function (cpu, mem) {
   //Branch if equal to zero
   var BEQ_BZS = function BEQ()
   {
-    var value = mem.readByte(cpu.reg.PC + 1);
+    var value = utils.fromTwosComplement(mem.readByte(cpu.reg.PC + 1));
     if(!cpu.P_STATUS.Z())
     {
       cpu.reg.PC +=2
@@ -529,7 +529,7 @@ var CPU_6507 = (function (cpu, mem) {
   //Branch if minus
   var BMI = function BMI()
   {
-    var value = mem.readByte(cpu.reg.PC + 1);
+    var value = utils.fromTwosComplement(mem.readByte(cpu.reg.PC + 1));
     if(!cpu.P_STATUS.N())
     {
       cpu.reg.PC +=2
