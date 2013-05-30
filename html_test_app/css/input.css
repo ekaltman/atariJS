@@ -1,0 +1,74 @@
+body {
+  background-color: #B8B8B8;
+}
+
+#frame {
+  width: 800px;
+  height: 500px;
+  float:left;
+}
+
+.computationOutputStyle {
+  font-family:"Courier";
+}
+
+#fileInputDiv {
+  float:left;
+}
+
+#inputTitle {
+  font-family:"Georgia";
+  font-size:xx-large;
+  color: white;
+}
+
+#inputText{
+  height: 190px;
+  width: 300px;
+  border: solid grey 5px;
+  padding: 5 5 5 5;
+  float:left;
+}
+
+#hexDump {
+  border: solid grey 5px;
+  background-color: white;
+  height: 200px;
+  width: 300px;
+  margin-top: 25px;
+  float:left;
+  padding: 5 5 5 5;
+}
+
+#processorTrace {
+  border: solid grey 5px;
+  background-color: white;
+  height: 200px;
+  width: 300px;
+  margin-top: 25px;
+  float:right;
+  padding: 5 5 5 5;
+}
+
+#outputDiv{
+  border: solid grey 5px;
+  background-color: white;
+  height: 195px;
+  width: 300px;
+  margin-top: 25px;
+  float:right;
+  padding: 5 5 5 5;
+}
+
+#inputButton {
+  float:left;
+  margin-top: 125px;
+  margin-left: 11px;
+  padding: 10 10 10 10;
+}
+
+#runProgram {
+  float: left;
+  margin-top: 125px;
+  margin-left: 20px;
+}
