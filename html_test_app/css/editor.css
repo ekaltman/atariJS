@@ -1,0 +1,109 @@
+body {
+  background: #0099F2;
+}
+
+label {
+  font-family: "Source Code Pro", sans-serif;
+}
+
+input[type="file"] {
+  font-family: "Source Code Pro", sans-serif;
+}
+
+button {
+  font-family: "Source Code Pro", sans-serif;
+}
+
+/* Main Divs */
+#topMenuBar {
+  padding: 0 0 0 6px;
+  height:36px;
+}
+
+#runOptions {
+  float:left;
+  margin: 7px 0 0 36px;
+}
+
+#titleImage {
+  float:left;
+  width: 128px;
+  height: 36px;
+  font-size: 20pt;
+  font-family: "Source Code Pro", sans-serif;
+  font-weight: 900;
+  color: white;
+}
+
+#editorWindows {
+  /* border: solid 1px #CCCCCC; */
+  width: 1424px;
+  height: 645px;
+  margin-top: 12px;
+}
+
+/* Columns */
+.editorColumn {
+  /* border: solid 1px #CCCCCC; */
+  height: 640px;
+  width: 700px;
+  float: left;
+}
+
+#editorRight {
+  margin-left: 12px;
+}
+
+/* Editor Windows */
+.editorWindow {
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  background: #FFFFFF;
+}
+
+#textEditor {
+  border: solid 1px #CCCCCC;
+  height: 320px;
+  width: 694px;
+  padding-top: 6px;
+  padding-left: 6px;
+}
+
+#hexMap {
+  border: solid 1px #CCCCCC;
+  height: 320px;
+  width: 100%;
+  margin-top: 12px;
+}
+
+#display {
+  border: solid 1px #CCCCCC;
+  height: 426px;
+  width: 100%;
+}
+
+#debug {
+  border: solid 1px #CCCCCC;
+  height: 220px;
+  width: 100%;
+  margin-top: 12px;
+}
+
+#debugOutput {
+  width:74%;
+  height:95%;
+  float:left;
+  padding-top: 6px;
+  overflow:auto;
+}
+
+#registerList {
+  width: 25%;
+  height: 100%;
+  font-family: "Source Code Pro", sans-serif;
+  float:left;
+  padding-left: 6px;
+  border-right: solid 1px #CCCCCC;
+  background: #EEEEFF;
+}

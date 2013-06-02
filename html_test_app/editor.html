@@ -1,0 +1,65 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <script type="text/javascript" charset="utf-8" src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script> 
+    <!-- <script type="text/javascript" charset="utf-8" src="libraries/jquery-1.8.1.min.js"></script>  -->
+    <script type="text/javascript" charset="utf-8" src="emulation/memory.js"></script>
+    <script type="text/javascript" charset="utf-8" src="emulation/utils.js"></script>
+    <script type="text/javascript" charset="utf-8" src="emulation/6507_ops.js"></script>
+    <script type="text/javascript" charset="utf-8" src="emulation/6507.js"></script>
+    <script type="text/javascript" charset="utf-8" src="emulation/utils.js"></script>
+
+    <!-- assembler.js is not mine, please read license and source info inside file. -->
+    <script type="text/javascript" charset="utf-8" src="assembler.js"></script>
+
+    <!-- CodeMirror text editor -->
+    <script type="text/javascript" charset="utf-8" src="libraries/codemirror/lib/codemirror.js"></script>
+    <script type="text/javascript" charset="utf-8" src="libraries/codemirror/keymap/vim.js"></script>
+
+    <!-- Init JS -->
+    <script type="text/javascript" charset="utf-8" src="editor.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/editor.css">
+    <link rel="stylesheet" type="text/css" href="libraries/codemirror/lib/codemirror.css">
+    <link href='http://fonts.googleapis.com/css?family=Source+Code+Pro:400,900' rel='stylesheet' type='text/css'>
+    <title>AtariJS Editor</title>
+  </head>
+  <body>
+  <div id="topMenuBar">
+    <div id="titleImage">AtariJS</div>
+    <div id="runOptions">
+      <label for="fileInput">Load ROM File:</label>
+      <input type="file" name="fileInput" id="fileInput" />
+      <label for="codeSnippets">Load Test Code:</label>
+      <input type="file" name="codeSnippets" id="codeSnippets" />
+      <label for="runIterations">Run for:</label>
+      <input type="text" name="runIterations" id="runIterations"/>
+      <button id="playButton">Run</button>
+      <button id="pauseButton">Pause</button>
+      <button id="stopButton">Stop</button>
+      <button id="forwardButton">Step Forward</button>
+      <button id="backButton">Step Back</button>
+    </div>
+  </div>
+  <div id="editorWindows">
+    <div id="editorLeft" class="editorColumn">
+      <div id="textEditor" class="editorWindow"></div>
+      <div id="hexMap" class="editorWindow"></div>
+    </div>
+    <div id="editorRight" class="editorColumn">
+      <div id="display" class="editorWindow"></div>
+      <div id="debug" class="editorWindow">
+        <div id="registerList">
+          <p id="registerA" class="registerValues">A = </p>
+          <p id="registerX" class="registerValues">X = </p>
+          <p id="registerY" class="registerValues">Y = </p>
+          <p id="registerP" class="registerValues">P = </p>
+          <p id="registerS" class="registerValues">S = </p>
+          <p id="registerPC" class="registerValues">PC = </p>
+        </div>
+        <div id="debugOutput"></div>
+      </div>
+    </div>
+  </div>
+  </body>
+</html>
