@@ -22,9 +22,9 @@ var CPU_6507 = (function (cpu, mem) {
     {
       if(that._debugOutput)
       {
-        if($(that._debugOutput).length > 0)
+        if(that._debugOutput.length > 0)
         {
-          $(that._debugOutput).text(msg);
+          that._debugOutput.append("<p>" + msg + "</p>");
         }
       }else
       {
@@ -137,6 +137,8 @@ var CPU_6507 = (function (cpu, mem) {
   cpu.reset = function()
   {
     cpu.reg = {A:0, X:0, Y:0, PC:0xF000, S:0xFF, P:0};
+    cpu.cc = 0;
+    cpu.inst_cc = 0;
     _debug.reset();
   };
 
@@ -145,8 +147,8 @@ var CPU_6507 = (function (cpu, mem) {
     A:0,        //Accumulator
     X:0,        //Index X
     Y:0,        //Index Y
-    PC:0xf000,  //Program Counter, counts up from 0xf000 - 0xffff, mirrorred every 0x2000
-    S:0,     //Stack Pointer, counts down from 0xff (255) to 0x80 (128), only 128 bytes of RAM
+    PC:0xF000,  //Program Counter, counts up from 0xf000 - 0xffff, mirrorred every 0x2000
+    S:0xff,     //Stack Pointer, counts down from 0xff (255) to 0x80 (128), only 128 bytes of RAM
     P:0         //Program Status Register, see below
   };
 
@@ -1097,7 +1099,7 @@ var CPU_6507 = (function (cpu, mem) {
     var lo = mem.readByte(cpu.reg.S + 1);
     var hi = mem.readByte(cpu.reg.S + 2);
     cpu.reg.S += 2;
-    cpu.reg.PC = (hi >> 8) + lo + 1;
+    cpu.reg.PC = (hi << 8) + lo + 1;
   }
 
   cpu.map[cpu.inst.RTS] = new Op(RTS, null, 6);

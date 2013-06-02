@@ -38,6 +38,21 @@ var utils = {
 
     return hexString + hexMap[value];
   },
+  formatToDigits: function(stringValue, digits)
+  {
+    var i;
+    var diff = digits - stringValue.length;
+    var leads = "";
+    if(diff > 0)
+    {
+      for(i = 0; i < diff; i++)
+      {
+        leads += "0";
+      }
+    }
+
+    return leads + stringValue;
+  },
   regCopy: function(reg)
   {
     var newReg = new Object();

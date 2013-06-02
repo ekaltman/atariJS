@@ -7,6 +7,7 @@ $(function()
     var built = false;
     var runInterval = 100;
     var defaultPC = 0xF000;
+    var maxDebugStatements = 300;
 
     //interface variables
     var editor = this.editor = CodeMirror($("#textEditor")[0], {keyMap:"vim"});
@@ -56,6 +57,13 @@ $(function()
       run(1);
     });
 
+    stopButton.click(function()
+    {
+      CPU_6507.reset();
+      debug.empty();
+      updateRegisterOutput();
+    });
+
     fileInput.change(readBinaryFile);
 
     this.editor.doc.cm.on("change", function(changeObj)
@@ -63,19 +71,38 @@ $(function()
       built = false;
     });
 
+    function convertHexDumpToHTML(hexDump)
+    {
+      var lines = hexDump.split("\n");
+      var html = "<p>";
+
+      var i;
+      for(i = 0; i < lines.length; i++)
+      {
+        html += lines[i] + "<br/>";
+      }
+
+      return html + "</p>";
+    }
+
     function build(binaryData)
     {
+      CPU_6507.reset();
       //if passed binary file data load it into memory
       if(binaryData !== null && binaryData !== undefined)
       {
         MEMORY.loadBinary(defaultPC, binaryData);
         built = true;
+        hexWindow.empty();
+        hexWindow.append(convertHexDumpToHTML(MEMORY.hexDump()));
       }else //assume data is present in textEditor
       {
         if(!built)
         {
           simulator.assemble();
           built = true;
+          hexWindow.empty();
+          hexWindow.append(convertHexDumpToHTML(MEMORY.hexDump()));
         }
       }
     }
@@ -110,13 +137,17 @@ $(function()
       registers.each(function()
       {
         var reg = $(this).attr("id").slice(8);
-        var regText;
-        if(reg !== "P")
+        var regText = reg + " = ";
+
+        if(reg == "P")
         {
-          regText = reg + " = 0x" + CPU_6507.reg[reg].toString(16).toUpperCase();
+          regText += CPU_6507.reg[reg].toString(2);
+        }else if(reg == "PC")
+        {
+          regText += (CPU_6507.reg[reg] & 0xFFFF).toString(16).toUpperCase();
         }else
         {
-          regText = reg + " = " + CPU_6507.reg[reg].toString(2);
+          regText += (CPU_6507.reg[reg] & 0xFF).toString(16).toUpperCase();
         }
         $(this).text(regText);
 

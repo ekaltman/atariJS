@@ -10,15 +10,23 @@
 */
 
 
-function SimulatorWidget(button, mem) {
+function SimulatorWidget(button, mem, textSource, debugOutput) {
   //var $node = $(node);
   var ui = UI();
   var display = Display();
   var $button = $(button);
+  var textSource = textSource;
+  var debugOutput = debugOutput;
   var memory = Memory(mem);
   var labels = Labels();
   var simulator = Simulator();
   var assembler = Assembler();
+
+  this.assemble = function()
+  {
+    mem.clear();
+    assembler.assembleCode();
+  }
 
   function initialize() {
     stripText();
@@ -29,7 +37,6 @@ function SimulatorWidget(button, mem) {
     $button.click(function () {
       CPU_6507.reset();
       assembler.assembleCode();
-      assembler.hexdump();
     });
     /*
     $node.find('.runButton').click(simulator.runBinary);
@@ -62,9 +69,9 @@ function SimulatorWidget(button, mem) {
 
   function stripText() {
     //Remove leading and trailing space in textarea
-    var text = $('#inputText').val();
+    var text = textSource.getValue();
     text = text.replace(/^\n+/, '').replace(/\s+$/, '');
-    $('#inputText').val(text);
+    textSource.setValue(text);
   }
 
   function UI() {
@@ -1826,14 +1833,14 @@ function SimulatorWidget(button, mem) {
 
     // assembleCode()
     // "assembles" the code into memory
-    function assembleCode() {
+    function assembleCode(startPC) {
       simulator.reset();
       labels.reset();
       defaultCodePC = 0xf000;
       //$node.find('.messages code').empty();
 
       //var code = $node.find('.code').val();
-      var code = $("#inputText").val();
+      var code = textSource.getValue();
       code += "\n\n";
       var lines = code.split("\n");
       codeAssembledOK = true;
@@ -1868,7 +1875,10 @@ function SimulatorWidget(button, mem) {
         ui.assembleSuccess();
         memory.set(defaultCodePC, 0x00); //set a null byte at the end of the code
       } else {
-        var str = lines[i].replace("<", "&lt;").replace(">", "&gt;");
+        if(lines[i])
+        {
+          var str = lines[i].replace("<", "&lt;").replace(">", "&gt;");
+        }
         message("**Syntax error line " + (i + 1) + ": " + str + "**");
         //ui.initialize();
         return;
@@ -2485,8 +2495,9 @@ function SimulatorWidget(button, mem) {
 
   // message() - Prints text in the message window
   function message(text) {
-    $("#outputDiv").append(text + '\n').scrollTop(10000);
+    debugOutput.append(text + '\n').scrollTop(10000);
   }
+
 
 
   initialize();
