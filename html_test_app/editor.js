@@ -5,7 +5,7 @@ $(function()
   {
     var paused = false;
     var built = false;
-    var runInterval = 100;
+    var runInterval = 1;
     var defaultPC = 0xF000;
     var maxDebugStatements = 300;
 
@@ -87,10 +87,10 @@ $(function()
 
     function build(binaryData)
     {
-      CPU_6507.reset();
       //if passed binary file data load it into memory
       if(binaryData !== null && binaryData !== undefined)
       {
+        CPU_6507.reset();
         MEMORY.loadBinary(defaultPC, binaryData);
         built = true;
         hexWindow.empty();
@@ -99,6 +99,7 @@ $(function()
       {
         if(!built)
         {
+          CPU_6507.reset();
           simulator.assemble();
           built = true;
           hexWindow.empty();
@@ -113,7 +114,7 @@ $(function()
       var runInterval;
       var runFunction = function()
       {
-        if(numIterations)
+        if(numIterations != undefined)
         {
           if((CPU_6507.cc - currentCycles) < numIterations && !paused)
           {

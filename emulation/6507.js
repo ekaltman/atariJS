@@ -695,7 +695,7 @@ var CPU_6507 = (function (cpu, mem) {
     var r = cpu.reg.A - value;
 
     cpu.P_SET.N((r > 127));
-    cpu.P_SET.C((r < 255));
+    cpu.P_SET.C((r >= 0));
     cpu.P_SET.Z((r === 0));
   }
 
@@ -871,7 +871,7 @@ var CPU_6507 = (function (cpu, mem) {
   //Load accumulator from memory or immediate
   var LDA = function LDA(value)
   {
-    cpu.reg.A = value;
+    cpu.reg.A = value & 0xFF;
     cpu.P_SET.N((cpu.reg.A > 127));
     cpu.P_SET.Z((cpu.reg.A === 0));
   }
@@ -888,7 +888,7 @@ var CPU_6507 = (function (cpu, mem) {
   //Load index X from memory or immediate
   var LDX = function LDX(value)
   {
-    cpu.reg.X = value;
+    cpu.reg.X = value & 0xFF;
     cpu.P_SET.N((cpu.reg.X > 127));
     cpu.P_SET.Z((cpu.reg.X === 0));
   }
@@ -902,7 +902,7 @@ var CPU_6507 = (function (cpu, mem) {
   //Load index Y from memory or immediate
   var LDY = function LDY(value)
   {
-    cpu.reg.Y = value;
+    cpu.reg.Y = value & 0xFF;
     cpu.P_SET.N((cpu.reg.Y > 127));
     cpu.P_SET.Z((cpu.reg.Y === 0));
   }
@@ -917,7 +917,7 @@ var CPU_6507 = (function (cpu, mem) {
   var LSR_A = function LSR_A()
   {
     cpu.P_SET.C((cpu.reg.A & 1));
-    cpu.reg.A = cpu.reg >> 1;
+    cpu.reg.A = cpu.reg.A >> 1;
     cpu.P_SET.N(0);
     cpu.P_SET.Z((cpu.reg.A === 0));
     cpu.reg.PC += 1;
