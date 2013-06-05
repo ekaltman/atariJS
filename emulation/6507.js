@@ -24,7 +24,7 @@ var CPU_6507 = (function (cpu, mem) {
       {
         if(that._debugOutput.length > 0)
         {
-          that._debugOutput.append("<p>" + msg + "</p>");
+          that._debugOutput.append("<p>" + msg.replace(/\n/g, "<br/>") + "</p>");
         }
       }else
       {
@@ -39,7 +39,7 @@ var CPU_6507 = (function (cpu, mem) {
       {
         if(prop !== "changes")
         {
-          status += prop + ": " + trace[prop] + "\n";
+          status += prop + ": " + (isNaN(parseInt(trace[prop])) ? trace[prop] : trace[prop].toString(16)) + "\n";
         }else
         {
           var changes = trace[prop];
@@ -129,7 +129,7 @@ var CPU_6507 = (function (cpu, mem) {
       cpu.map[mem.readByte(cpu.reg.PC)].execute();
     }else
     {
-      cpu.inst_cc -= 1;
+      cpu.inst_cc--;
     }
     cpu.cc++;
   };
@@ -1121,7 +1121,7 @@ var CPU_6507 = (function (cpu, mem) {
     }else
     {
       r = a + cpu.P_STATUS.C() - 1 - value;
-      cpu.P_SET.C((r < 255)); //6502 sets complement of borrow, so no borrow = 1, borrow = 0
+      cpu.P_SET.C((r >= 0)); //6502 sets complement of borrow, so no borrow = 1, borrow = 0
     }
 
     //Set status flags

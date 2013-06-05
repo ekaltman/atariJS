@@ -10,9 +10,6 @@ input[type="file"] {
   font-family: "Source Code Pro", sans-serif;
 }
 
-#runIterations {
-  width: 40px;
-}
 
 button {
   font-family: "Source Code Pro", sans-serif;
@@ -27,6 +24,14 @@ button {
 #runOptions {
   float:left;
   margin: 7px 0 0 0;
+}
+
+#runIterations {
+  width: 40px;
+}
+
+label[for="runIterations"] {
+  margin-left: 40px;
 }
 
 #titleImage {
@@ -74,13 +79,17 @@ button {
   padding-left: 6px;
 }
 
-#hexMap {
+#hexWindow {
   border: solid 1px #CCCCCC;
   height: 320px;
   width: 100%;
   margin-top: 12px;
   font-family: "Source Code Pro", sans-serif;
   overflow:auto;
+}
+
+#hexRefreshButton {
+  float: right;
 }
 
 #display {

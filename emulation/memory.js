@@ -47,18 +47,31 @@ var MEMORY = (function(){
   {
     var dumpStartAddress = 0xF000;
     var lineSize = 16;
-    var dump = "";
+    var dump = "ZERO PAGE:\n";
 
     var i;
+    for(i = 0; i < 0x100; i++)
+    {
+      generateDumpAddress(i);
+    }
+
+    dump += "\n\nROM MEMORY\n";
+
     for(i = dumpStartAddress; i < 0x10000; i++)
+    {
+      generateDumpAddress(i);
+    }
+
+    function generateDumpAddress(addr)
     {
       if(i % 16 === 0)
       {
-        dump += '\n' + i.toString(16).toUpperCase() + " " + utils.formatToDigits(memArray[i].toString(16).toUpperCase(), 2);
+        dump += '\n' + utils.formatToDigits(i.toString(16).toUpperCase(), 4) + " " +
+                utils.formatToDigits(memArray[i].toString(16).toUpperCase(), 2);
       }else
       {
         dump += " " + utils.formatToDigits(memArray[i].toString(16).toUpperCase(), 2);
-      } 
+      }
     }
 
     return dump;

@@ -31,7 +31,7 @@
       <label for="fileInput">Load ROM File:</label>
       <input type="file" name="fileInput" id="fileInput" />
       <label for="codeSnippets">Load Test Code:</label>
-      <input type="file" name="codeSnippets" id="codeSnippets" />
+      <select name="codeSnippets" id="codeSnippets" ></select>
       <label for="runIterations">Run for:</label>
       <input type="text" name="runIterations" id="runIterations"/>
       <button id="playButton">Run</button>
@@ -44,7 +44,10 @@
   <div id="editorWindows">
     <div id="editorLeft" class="editorColumn">
       <div id="textEditor" class="editorWindow"></div>
-      <div id="hexMap" class="editorWindow"></div>
+      <div id="hexWindow" class="editorWindow">
+        <button id="hexRefreshButton">Refresh Hex Map</button>
+        <div id="hexMap"></div>
+      </div>
     </div>
     <div id="editorRight" class="editorColumn">
       <div id="display" class="editorWindow"></div>

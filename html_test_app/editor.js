@@ -4,27 +4,76 @@ $(function()
   function IDE()
   {
     var paused = false;
+    var running = false;
     var built = false;
-    var runInterval = 1;
+    var runIntervalTime = 1;
     var defaultPC = 0xF000;
     var maxDebugStatements = 300;
+    var runInterval;
+    var JSONTestCodeUrl = "tutorial_code.json";
+    var tutorialSnippets = [];
 
     //interface variables
-    var editor = this.editor = CodeMirror($("#textEditor")[0], {keyMap:"vim"});
-    var hexWindow = $("#hexMap");
-    var registers = $("#registerList > p");
-    var display = $("#display");
-    var debug = this.debug = $("#debugOutput");
+    var editor      = this.editor = CodeMirror($("#textEditor")[0], {keyMap:"vim"});
+    var hexWindow   = $("#hexWindow");
+    var hexMap      = $("#hexMap");
+    var registers   = $("#registerList > p");
+    var display     = $("#display");
+    var debug       = this.debug = $("#debugOutput");
+    var codeSelect  = $("#codeSnippets");
 
-    var playButton   = $("#playButton");
-    var pauseButton  = $("#pauseButton");
-    var stopButton   = $("#stopButton");
-    var forwardButton   = $("#forwardButton");
-    var rewindButton   = $("#rewindButton");
-    var interationInput = $("#runIterations");
+    var playButton        = $("#playButton");
+    var pauseButton       = $("#pauseButton");
+    var stopButton        = $("#stopButton");
+    var forwardButton     = $("#forwardButton");
+    var rewindButton      = $("#rewindButton");
+    var hexRefreshButton  = $("#hexRefreshButton");
+    var interationInput   = $("#runIterations");
+    var fileInput         = $("#fileInput");
+
     interationInput.forceNumeric();
 
-    var fileInput = $("#fileInput");
+    //Initialization
+    function loadSetupJSON()
+    {
+      $.getJSON(JSONTestCodeUrl, initializeIDE)
+    }
+
+    function initializeIDE(jsonData)
+    {
+      var selectOutput = ['<option value="blank"></option>'];
+
+      var i;
+      for( i = 0; i < jsonData.codeSnippets.length; i++)
+      {
+        var snippet = jsonData.codeSnippets[i];
+        var codeString = ";";
+
+        codeString += snippet["title"].toUpperCase() + "\n";
+        codeString += ";" + snippet["description"].replace(/\n/g, "\n;") + "\n\n";
+        codeString += snippet["code"];
+        tutorialSnippets.push(codeString);
+
+        selectOutput.push('<option value="' + i +'">' + (i + 1) + ": " + snippet["optionLabel"] + '</option>');
+      }
+
+      codeSelect.html(selectOutput.join(''));
+    }
+
+    //UI Event Handlers
+    codeSelect.change(function(element)
+    {
+      reset();
+
+      if(this.value != "blank")
+      {
+        editor.doc.setValue(tutorialSnippets[parseInt(this.value)]);
+      }else
+      {
+        editor.doc.setValue("");
+      }
+
+    });
 
     playButton.click(function()
     {
@@ -34,18 +83,19 @@ $(function()
       {
         build();
         run(numIters);
+      }else if(isNaN(numIters))
+      {
+        build();
+        run();
       }else
       {
-        debug.append("<p>Error: Iterations specified not a valid number</p>");
+        debug.append("<p>Error: Something wrong with iterations input, reading: " + numIters + "</p>");
       }
     });
 
     pauseButton.click(function()
     {
-      if(!paused)
-      {
-        paused = true;
-      }
+      paused = !paused;
     });
 
     forwardButton.click(function()
@@ -57,12 +107,13 @@ $(function()
       run(1);
     });
 
-    stopButton.click(function()
+    stopButton.click(reset);
+
+    hexRefreshButton.click(function()
     {
-      CPU_6507.reset();
-      debug.empty();
-      updateRegisterOutput();
+      refreshHexMap();
     });
+
 
     fileInput.change(readBinaryFile);
 
@@ -71,18 +122,26 @@ $(function()
       built = false;
     });
 
+
+    //Data and run-time functions
     function convertHexDumpToHTML(hexDump)
     {
-      var lines = hexDump.split("\n");
-      var html = "<p>";
+      return "<p>" + hexDump.replace(/\n/g, "<br/>") + "</p>";
+    }
 
-      var i;
-      for(i = 0; i < lines.length; i++)
-      {
-        html += lines[i] + "<br/>";
-      }
+    function refreshHexMap()
+    {
+      hexMap.empty();
+      hexMap.append(convertHexDumpToHTML(MEMORY.hexDump()));
+    }
 
-      return html + "</p>";
+    function reset()
+    {
+      running = false;
+      clearInterval(runInterval);
+      CPU_6507.reset();
+      debug.empty();
+      updateRegisterOutput();
     }
 
     function build(binaryData)
@@ -93,8 +152,8 @@ $(function()
         CPU_6507.reset();
         MEMORY.loadBinary(defaultPC, binaryData);
         built = true;
-        hexWindow.empty();
-        hexWindow.append(convertHexDumpToHTML(MEMORY.hexDump()));
+        editor.setValue("");
+        refreshHexMap();
       }else //assume data is present in textEditor
       {
         if(!built)
@@ -102,8 +161,7 @@ $(function()
           CPU_6507.reset();
           simulator.assemble();
           built = true;
-          hexWindow.empty();
-          hexWindow.append(convertHexDumpToHTML(MEMORY.hexDump()));
+          refreshHexMap();
         }
       }
     }
@@ -111,26 +169,35 @@ $(function()
     function run(numIterations)
     {
       var currentCycles = CPU_6507.cc;
-      var runInterval;
       var runFunction = function()
       {
-        if(numIterations != undefined)
+        if(paused)
         {
-          if((CPU_6507.cc - currentCycles) < numIterations && !paused)
+            running = false;
+            clearInterval(runInterval);
+        }else if(numIterations != undefined && numIterations != "")
+        {
+          if((CPU_6507.cc - currentCycles) < numIterations)
           {
             CPU_6507.step();
             updateRegisterOutput();
           }else
           {
+            running = false;
             clearInterval(runInterval);
           }
-        }else if(paused)
+        }else
         {
-          clearInterval(runInterval);
+          CPU_6507.step();
+          updateRegisterOutput();
         }
       }
 
-      runInterval = setInterval(runFunction, runInterval);
+      if(!running)
+      {
+        running = true;
+        runInterval = setInterval(runFunction, runIntervalTime);
+      }
     }
 
     function updateRegisterOutput()
@@ -173,12 +240,13 @@ $(function()
         }
       } else
       {
-        alert('The File APIs are not supported by your browser');
+        alert('The File APIs are not supported by your browser, please run something more modern.');
       }
     }
 
     //IDE initialization function
     updateRegisterOutput();
+    loadSetupJSON();
   }
 
   var ide = new IDE();

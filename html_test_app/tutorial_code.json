@@ -1,0 +1,52 @@
+{
+  "codeSnippets": [
+                    {
+                      "title": "8-bit Data Transfer",
+                      "optionLabel": "8-bit Data Transfer",
+                      "description": "Move contents of memory location 0040 to memory location 0041",
+                      "code": "LDA #$6A\nSTA $40\n\nLDA $40\nSTA $41\nBRK"
+                    },
+                    {
+                      "title": "8-bit Addition",
+                      "optionLabel": "8-bit Addition",
+                      "description": "Add the contents of memory locations 0040 and 0041,\nand place the result in memory location 0042",
+                      "code": "LDA #$38\nSTA $40\nLDA #$2B\nSTA $41\n\nCLC\nLDA $40\nADC $41\nSTA $42\nBRK"
+                    },
+                    {
+                      "title": "Shift Left One Bit",
+                      "optionLabel": "Shift Left One Bit",
+                      "description": "Shifts contents of memory location 0040 left one bit\nand places result into location 0041",
+                      "code": "LDA #$6F\nSTA $40\n\nLDA $40\nASL A\nSTA $41\nBRK"
+                    },
+                    {
+                      "title": "Mask Off Most Significant Four Bits",
+                      "optionLabel": "Mask 4 MSBs",
+                      "description": "Put the least significant bits of 0040 into the least\nsignificant bits of 0041. Clear most significant four bits\nof 0041",
+                      "code": "LDA #$3D\nSTA $40\n\nLDA $40\nAND #$0F\nSTA $41\nBRK"
+                    },
+                    {
+                      "title": "Clear a Memory Location",
+                      "optionLabel": "Clear a Memory Location",
+                      "description": "Clear memory location 0040",
+                      "code": "LDA #$0\nSTA $40\nBRK"
+                    },
+                    {
+                      "title": "Word Disassembly",
+                      "optionLabel": "Word Disassembly",
+                      "description": "Divide contents of 0040 into two, storing the 4 MSB\nin the 4 LSB of 0041 and the 4 LSB in the 4 LSB of 0042",
+                      "code": "LDA #$3F\nSTA $40\n\nLDA $40\nAND #$0F\nSTA $42\nLDA $40\nLSR A\nLSR A\nLSR A\nLSR A\nSTA $41\nBRK"
+                    },
+                    {
+                      "title": "Find the Larger of Two Numbers",
+                      "optionLabel": "Greater Than",
+                      "description": "Put the larger of the contents of 0040 and 0041 into 0042",
+                      "code": "LDA #$3F\nSTA $40\nLDA #$1A\nSTA $41\n\nLDA $40\nCMP $41\t\t;is $41 larger?\nBCS STRES\t;Branch if carry set\nLDA $41\nSTRES:\t\t;Jump to here if $40 larger\nSTA $42\nBRK"
+                    },
+                    {
+                      "title": "16-bit Addition",
+                      "optionLabel": "16-bit Addition",
+                      "description": "Add two 16-bit numbers, stored LSB first, in memory locations (0040, 0041) \nand (0042, 0043)",
+                      "code": "LDA #$2A\nSTA $40\nLDA #$67\nSTA $41\nLDA #$F8\nSTA $42\nLDA #$14\nSTA $43\n\nCLC\nLDA $40\nADC $42\t;Add LSB first\nSTA $44\nLDA $41\nADC $43\t;Add MSB with carry\nSTA $45\nBRK"
+                    }
+                  ]
+}
