@@ -151,8 +151,8 @@ $(function()
       {
         CPU_6507.reset();
         MEMORY.loadBinary(defaultPC, binaryData);
-        built = true;
         editor.setValue("");
+        built = true;
         refreshHexMap();
       }else //assume data is present in textEditor
       {
